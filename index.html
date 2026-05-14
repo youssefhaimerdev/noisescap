@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>White Noise Generator — Free Online Background Sounds for Focus &amp; Sleep</title>
+  <meta name="description" content="Free white noise generator in your browser. Mix white noise, brown noise, pink noise, rain, ocean waves, coffee shop sounds and more. No download, no app, no ads. Perfect for focus, study, and sleep.">
+  <link rel="canonical" href="https://whitenoisegenerator.app/">
+  <meta name="google-adsense-account" content="ca-pub-3379075069129713">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="white noise online free, white noise generator browser, brown noise online, pink noise generator, focus sounds no download, white noise for sleep online, ambient noise generator">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="White Noise Generator — Free Online Background Sounds">
+  <meta property="og:description" content="Mix white noise, brown noise, rain, ocean waves and more. Free, browser-based, instant — no download required.">
+  <meta property="og:url" content="https://whitenoisegenerator.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://whitenoisegenerator.app/og-image.png">
+
+  <!-- hreflang -->
+  <link rel="alternate" hreflang="en" href="https://whitenoisegenerator.app/">
+  <link rel="alternate" hreflang="x-default" href="https://whitenoisegenerator.app/">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Noisescape — White Noise Generator",
+    "url": "https://whitenoisegenerator.app",
+    "description": "Free online white noise generator. Mix ambient sounds including white noise, brown noise, pink noise, rain, ocean waves, forest and coffee shop sounds for focus and sleep.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires Web Audio API support",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .generator-wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .sound-card[data-sound="white"]  { --card-color: rgba(200,210,255,0.08); }
+    .sound-card[data-sound="brown"]  { --card-color: rgba(200,140,80,0.08);  }
+    .sound-card[data-sound="pink"]   { --card-color: rgba(220,130,180,0.08); }
+    .sound-card[data-sound="rain"]   { --card-color: rgba(82,150,215,0.08);  }
+    .sound-card[data-sound="storm"]  { --card-color: rgba(130,90,220,0.08);  }
+    .sound-card[data-sound="coffee"] { --card-color: rgba(200,140,70,0.08);  }
+    .sound-card[data-sound="ocean"]  { --card-color: rgba(60,180,215,0.08);  }
+    .sound-card[data-sound="forest"] { --card-color: rgba(80,200,120,0.08);  }
+
+    /* Active card specific glow colors */
+    .sound-card[data-sound="brown"].active   { box-shadow: 0 0 0 1px rgba(200,140,80,0.2), 0 8px 32px rgba(200,140,80,0.1); border-color: rgba(200,140,80,0.3); }
+    .sound-card[data-sound="pink"].active    { box-shadow: 0 0 0 1px rgba(220,130,180,0.2), 0 8px 32px rgba(220,130,180,0.1); border-color: rgba(220,130,180,0.3); }
+    .sound-card[data-sound="rain"].active    { box-shadow: 0 0 0 1px rgba(82,150,215,0.2), 0 8px 32px rgba(82,150,215,0.1); border-color: rgba(82,150,215,0.3); }
+    .sound-card[data-sound="storm"].active   { box-shadow: 0 0 0 1px rgba(130,90,220,0.2), 0 8px 32px rgba(130,90,220,0.1); border-color: rgba(130,90,220,0.3); }
+    .sound-card[data-sound="coffee"].active  { box-shadow: 0 0 0 1px rgba(200,140,70,0.2), 0 8px 32px rgba(200,140,70,0.1); border-color: rgba(200,140,70,0.3); }
+    .sound-card[data-sound="ocean"].active   { box-shadow: 0 0 0 1px rgba(60,180,215,0.2), 0 8px 32px rgba(60,180,215,0.1); border-color: rgba(60,180,215,0.3); }
+    .sound-card[data-sound="forest"].active  { box-shadow: 0 0 0 1px rgba(80,200,120,0.2), 0 8px 32px rgba(80,200,120,0.1); border-color: rgba(80,200,120,0.3); }
+
+    .no-sounds-hint {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.3s;
+    }
+    .no-sounds-hint.hidden { opacity: 0; pointer-events: none; }
+
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      padding: 16px 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      flex-wrap: wrap;
+    }
+    .stat { display: flex; flex-direction: column; gap: 2px; }
+    .stat-value { font-size: 1.1rem; font-weight: 600; color: var(--accent); font-family: var(--font-display); }
+    .stat-label { font-size: 0.73rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .quick-presets {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .preset-label {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+    .preset-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      padding: 7px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-body);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .preset-btn:hover {
+      color: var(--text);
+      background: var(--surface-3);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .controls-divider {
+      width: 1px;
+      height: 32px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .generator-wrap { padding: 0 16px 60px; }
+      .stats-bar { gap: 16px; padding: 14px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M2 12h2M6 6l1.5 2M6 18l1.5-2M18 6l-1.5 2M18 18l-1.5-2M22 12h-2"/>
+      <path d="M8 9v6M11 7v10M14 9v6M17 11v2"/>
+    </svg>
+    Noisescape
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/" class="active">Generator</a></li>
+    <li><a href="/how-it-works">How It Works</a></li>
+    <li><a href="/focus-tips">Focus Tips</a></li>
+    <li><a href="/sleep-sounds">Sleep Sounds</a></li>
+    <li><a href="/faq">FAQ</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="menuBtn" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+
+<!-- Focus exit button -->
+<button class="focus-exit-btn" id="focusExitBtn">✕ Exit Focus Mode</button>
+
+<!-- Hero -->
+<header class="site-hero">
+  <div class="hero-badge"><span></span> 8 Live Sound Generators · No Download</div>
+  <h1>Your personal<br><em>soundscape</em></h1>
+  <p>Mix ambient sounds crafted in your browser using the Web Audio API. Free forever, zero ads, zero accounts. Just pure focus and calm.</p>
+</header>
+
+<!-- Generator -->
+<div class="focus-wrapper">
+<div class="generator-wrap">
+
+  <!-- Quick presets -->
+  <div class="quick-presets">
+    <span class="preset-label">Presets</span>
+    <button class="preset-btn" data-preset="focus">🧠 Deep Focus</button>
+    <button class="preset-btn" data-preset="sleep">🌙 Sleep</button>
+    <button class="preset-btn" data-preset="rain">🌧️ Rainy Day</button>
+    <button class="preset-btn" data-preset="nature">🌿 Nature</button>
+    <button class="preset-btn" data-preset="work">☕ Work Café</button>
+    <button class="preset-btn" data-preset="clear" style="margin-left:auto;">✕ Clear All</button>
+  </div>
+
+  <!-- Sound cards -->
+  <div class="sounds-grid" id="soundsGrid">
+
+    <div class="sound-card" data-sound="white">
+      <div class="sound-card-header">
+        <div class="sound-icon">〰️</div>
+        <div class="sound-toggle" role="switch" aria-checked="false" aria-label="Toggle White Noise"></div>
+      </div>
+      <div>
+        <div class="sound-name">White Noise</div>
+        <div class="sound-desc">All frequencies · equal energy</div>
+      </div>
+      <div class="waveform" aria-hidden="true">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+      </div>
+      <div class="volume-control">
+        <span class="vol-icon">🔈</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" class="sound-volume" aria-label="White Noise volume">
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
+
+    <div class="sound-card" data-sound="brown">
+      <div class="sound-card-header">
+        <div class="sound-icon">🌊</div>
+        <div class="sound-toggle" role="switch" aria-checked="false" aria-label="Toggle Brown Noise"></div>
+      </div>
+      <div>
+        <div class="sound-name">Brown Noise</div>
+        <div class="sound-desc">Deep bass · warm rumble</div>
+      </div>
+      <div class="waveform" aria-hidden="true">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+      </div>
+      <div class="volume-control">
+        <span class="vol-icon">🔈</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" class="sound-volume" aria-label="Brown Noise volume">
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
+
+    <div class="sound-card" data-sound="pink">
+      <div class="sound-card-header">
+        <div class="sound-icon">🌸</div>
+        <div class="sound-toggle" role="switch" aria-checked="false" aria-label="Toggle Pink Noise"></div>
+      </div>
+      <div>
+        <div class="sound-name">Pink Noise</div>
+        <div class="sound-desc">Balanced · natural energy</div>
+      </div>
+      <div class="waveform" aria-hidden="true">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+      </div>
+      <div class="volume-control">
+        <span class="vol-icon">🔈</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" class="sound-volume" aria-label="Pink Noise volume">
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
+
+    <div class="sound-card" data-sound="rain">
+      <div class="sound-card-header">
+        <div class="sound-icon">🌧️</div>
+        <div class="sound-toggle" role="switch" aria-checked="false" aria-label="Toggle Rain"></div>
+      </div>
+      <div>
+        <div class="sound-name">Rain</div>
+        <div class="sound-desc">Soft patter · gentle hiss</div>
+      </div>
+      <div class="waveform" aria-hidden="true">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+      </div>
+      <div class="volume-control">
+        <span class="vol-icon">🔈</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" class="sound-volume" aria-label="Rain volume">
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
+
+    <div class="sound-card" data-sound="storm">
+      <div class="sound-card-header">
+        <div class="sound-icon">⛈️</div>
+        <div class="sound-toggle" role="switch" aria-checked="false" aria-label="Toggle Thunderstorm"></div>
+      </div>
+      <div>
+        <div class="sound-name">Thunderstorm</div>
+        <div class="sound-desc">Rain + rolling thunder</div>
+      </div>
+      <div class="waveform" aria-hidden="true">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+      </div>
+      <div class="volume-control">
+        <span class="vol-icon">🔈</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" class="sound-volume" aria-label="Thunderstorm volume">
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
+
+    <div class="sound-card" data-sound="coffee">
+      <div class="sound-card-header">
+        <div class="sound-icon">☕</div>
+        <div class="sound-toggle" role="switch" aria-checked="false" aria-label="Toggle Coffee Shop"></div>
+      </div>
+      <div>
+        <div class="sound-name">Coffee Shop</div>
+        <div class="sound-desc">Ambient chatter · warm hum</div>
+      </div>
+      <div class="waveform" aria-hidden="true">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+      </div>
+      <div class="volume-control">
+        <span class="vol-icon">🔈</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" class="sound-volume" aria-label="Coffee Shop volume">
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
+
+    <div class="sound-card" data-sound="ocean">
+      <div class="sound-card-header">
+        <div class="sound-icon">🏖️</div>
+        <div class="sound-toggle" role="switch" aria-checked="false" aria-label="Toggle Ocean Waves"></div>
+      </div>
+      <div>
+        <div class="sound-name">Ocean Waves</div>
+        <div class="sound-desc">Rolling surf · sea breeze</div>
+      </div>
+      <div class="waveform" aria-hidden="true">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+      </div>
+      <div class="volume-control">
+        <span class="vol-icon">🔈</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" class="sound-volume" aria-label="Ocean Waves volume">
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
+
+    <div class="sound-card" data-sound="forest">
+      <div class="sound-card-header">
+        <div class="sound-icon">🌲</div>
+        <div class="sound-toggle" role="switch" aria-checked="false" aria-label="Toggle Forest"></div>
+      </div>
+      <div>
+        <div class="sound-name">Forest</div>
+        <div class="sound-desc">Wind · rustling leaves</div>
+      </div>
+      <div class="waveform" aria-hidden="true">
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div><div class="waveform-bar"></div><div class="waveform-bar"></div>
+        <div class="waveform-bar"></div>
+      </div>
+      <div class="volume-control">
+        <span class="vol-icon">🔈</span>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" class="sound-volume" aria-label="Forest volume">
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
+
+  </div><!-- /sounds-grid -->
+
+  <!-- Hint -->
+  <p class="no-sounds-hint" id="noSoundsHint">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+    Click any card to start playing · Mix multiple sounds together
+  </p>
+
+  <!-- Master Controls -->
+  <div class="controls-bar" id="controlsBar">
+    <div class="control-group" style="flex:1.5; min-width:200px;">
+      <span class="control-label">Master</span>
+      <input type="range" min="0" max="1" step="0.01" value="0.8" id="masterVolume" class="master-vol-slider" aria-label="Master volume">
+    </div>
+    <div class="controls-divider"></div>
+    <div class="control-group" style="flex:0; gap:10px;">
+      <span class="control-label">Timer</span>
+      <select class="timer-select" id="timerSelect" aria-label="Sleep timer">
+        <option value="0">Off</option>
+        <option value="30">30 min</option>
+        <option value="60">60 min</option>
+        <option value="90">90 min</option>
+        <option value="120">120 min</option>
+      </select>
+      <div class="timer-display" id="timerDisplay"></div>
+    </div>
+    <div class="controls-divider"></div>
+    <button class="focus-btn" id="focusBtn" aria-label="Enter focus mode">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+      Focus Mode
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-value" id="activeSoundCount">0</span><span class="stat-label">Sounds Active</span></div>
+    <div class="stat"><span class="stat-value" id="sessionTime">0:00</span><span class="stat-label">Session Time</span></div>
+    <div class="stat"><span class="stat-value">∞</span><span class="stat-label">Loops Remaining</span></div>
+    <div class="stat"><span class="stat-value">Free</span><span class="stat-label">Cost</span></div>
+  </div>
+
+</div><!-- /generator-wrap -->
+</div><!-- /focus-wrapper -->
+
+<!-- Content section -->
+<section class="content-section">
+  <div class="container">
+    <div class="section-grid">
+      <div>
+        <h2>Why background noise works</h2>
+        <p style="margin-top:16px;">Your brain is wired to notice change, not constant sound. White noise, brown noise, and nature sounds create an even acoustic blanket that prevents your auditory system from latching onto distractions — leaving your prefrontal cortex free to focus on what matters.</p>
+        <p style="margin-top:12px;">Unlike music with lyrics, pure noise doesn't compete with verbal thinking, making it ideal for reading, writing, coding, and studying. The effect is well-documented in cognitive science: moderate ambient noise (around 70 dB) consistently outperforms silence for creative and analytical tasks.</p>
+        <div class="internal-links" style="margin-top:24px;">
+          <a href="/how-it-works" class="internal-link">→ How it works</a>
+          <a href="/focus-tips" class="internal-link">→ Focus science</a>
+          <a href="/sleep-sounds" class="internal-link">→ Sleep sounds guide</a>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="info-card">
+          <h4 style="color:var(--accent);margin-bottom:8px;">🧠 For Focus & Work</h4>
+          <p style="font-size:0.9rem;">Try <strong>Brown Noise</strong> or <strong>Coffee Shop</strong> for deep work. Both mask office noise while maintaining the gentle stimulation your brain needs to stay engaged.</p>
+        </div>
+        <div class="info-card">
+          <h4 style="color:var(--accent-warm);margin-bottom:8px;">🌙 For Sleep</h4>
+          <p style="font-size:0.9rem;"><strong>Pink Noise</strong> has been shown in studies to improve slow-wave sleep quality. Pair with the <strong>Sleep Timer</strong> so it stops automatically after you drift off.</p>
+        </div>
+        <div class="info-card">
+          <h4 style="color:var(--accent-blue);margin-bottom:8px;">🎛️ Mix & Match</h4>
+          <p style="font-size:0.9rem;">Layer <strong>Rain + Brown Noise</strong> for a cozy reading session, or <strong>Ocean + Forest</strong> for a meditative experience. Every combination is unique.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="nav-logo" style="font-size:1.2rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12h2M6 6l1.5 2M6 18l1.5-2M18 6l-1.5 2M18 18l-1.5-2M22 12h-2"/><path d="M8 9v6M11 7v10M14 9v6M17 11v2"/></svg>
+        Noisescape
+      </a>
+      <p>Free, browser-based ambient sound generator. No downloads, no accounts, no ads. Just the sounds you need to focus, relax, and sleep better.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Tools</h5>
+      <ul>
+        <li><a href="/">White Noise Generator</a></li>
+        <li><a href="/">Brown Noise Online</a></li>
+        <li><a href="/">Pink Noise Generator</a></li>
+        <li><a href="/">Rain Sounds</a></li>
+        <li><a href="/">Ocean Wave Sounds</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Learn</h5>
+      <ul>
+        <li><a href="/how-it-works">How It Works</a></li>
+        <li><a href="/focus-tips">Focus &amp; Productivity</a></li>
+        <li><a href="/sleep-sounds">Sleep Sounds Guide</a></li>
+        <li><a href="/faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>About</h5>
+      <ul>
+        <li><a href="/how-it-works">Web Audio API</a></li>
+        <li><a href="/faq">Privacy</a></li>
+        <li><a href="/faq">No Account Needed</a></li>
+        <li><a href="/faq">100% Free</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Noisescape. Free forever. Zero tracking.</p>
+    <p>Made with Web Audio API · No audio files used</p>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   NOISESCAPE AUDIO ENGINE
+   All sounds are synthesized in-browser via Web Audio API.
+   No audio files. No external dependencies.
+═══════════════════════════════════════════════════════ */
+
+class NoisescapeEngine {
+  constructor() {
+    this.ctx = null;
+    this.masterGain = null;
+    this.activeNodes = {};
+    this.volumes = {};
+    this.masterVolume = 0.8;
+    this.timerEnd = null;
+    this._timerRAF = null;
+    this._sessionStart = null;
+    this._sessionRAF = null;
+  }
+
+  async init() {
+    if (this.ctx) {
+      if (this.ctx.state === 'suspended') await this.ctx.resume();
+      return;
+    }
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.masterGain = this.ctx.createGain();
+    this.masterGain.gain.value = this.masterVolume;
+    this.masterGain.connect(this.ctx.destination);
+  }
+
+  /* ── Buffer Helpers ──────────────────────────────── */
+  _makeBuffer(seconds, fillFn) {
+    const { ctx } = this;
+    const sr = ctx.sampleRate;
+    const len = sr * seconds;
+    const buf = ctx.createBuffer(2, len, sr);
+    for (let c = 0; c < 2; c++) fillFn(buf.getChannelData(c), len, c);
+    return buf;
+  }
+
+  _makeSrc(buf) {
+    const s = this.ctx.createBufferSource();
+    s.buffer = buf;
+    s.loop = true;
+    return s;
+  }
+
+  _makeLFO(freq, amount, target) {
+    const { ctx } = this;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const g = ctx.createGain();
+    g.gain.value = amount;
+    osc.connect(g);
+    if (target) g.connect(target);
+    osc.start();
+    return { osc, g };
+  }
+
+  _makeFilter(type, freq, q) {
+    const f = this.ctx.createBiquadFilter();
+    f.type = type;
+    f.frequency.value = freq;
+    if (q !== undefined) f.Q.value = q;
+    return f;
+  }
+
+  /* ── White Noise ─────────────────────────────────── */
+  _buildWhiteNoise() {
+    const buf = this._makeBuffer(6, (d, len) => {
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    });
+    const gain = this.ctx.createGain();
+    const src = this._makeSrc(buf);
+    src.connect(gain);
+    src.start();
+    return { gain, sources: [src] };
+  }
+
+  /* ── Brown Noise ─────────────────────────────────── */
+  _buildBrownNoise() {
+    const buf = this._makeBuffer(6, (d, len) => {
+      let last = 0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        d[i] = (last + 0.02 * w) / 1.02;
+        last = d[i];
+        d[i] *= 3.5;
+        d[i] = Math.max(-1, Math.min(1, d[i]));
+      }
+    });
+    const gain = this.ctx.createGain();
+    const src = this._makeSrc(buf);
+    src.connect(gain);
+    src.start();
+    return { gain, sources: [src] };
+  }
+
+  /* ── Pink Noise (Voss-McCartney) ─────────────────── */
+  _buildPinkNoise() {
+    const buf = this._makeBuffer(6, (d, len) => {
+      let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        b0 = 0.99886*b0 + w*0.0555179;
+        b1 = 0.99332*b1 + w*0.0750759;
+        b2 = 0.96900*b2 + w*0.1538520;
+        b3 = 0.86650*b3 + w*0.3104856;
+        b4 = 0.55000*b4 + w*0.5329522;
+        b5 = -0.7616*b5 - w*0.0168980;
+        d[i] = (b0+b1+b2+b3+b4+b5+b6+w*0.5362) * 0.11;
+        b6 = w * 0.115926;
+      }
+    });
+    const gain = this.ctx.createGain();
+    const src = this._makeSrc(buf);
+    src.connect(gain);
+    src.start();
+    return { gain, sources: [src] };
+  }
+
+  /* ── Rain ────────────────────────────────────────── */
+  _buildRain() {
+    const { ctx } = this;
+    const wbuf = this._makeBuffer(8, (d, len) => {
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    });
+
+    const gain = ctx.createGain();
+
+    // High-frequency rain hiss
+    const hiss = this._makeSrc(wbuf);
+    const hissF = this._makeFilter('bandpass', 4200, 0.6);
+    const hissG = ctx.createGain(); hissG.gain.value = 0.6;
+    hiss.connect(hissF); hissF.connect(hissG); hissG.connect(gain);
+
+    // Mid rain on surfaces
+    const mid = this._makeSrc(wbuf);
+    const midF = this._makeFilter('bandpass', 900, 0.4);
+    const midG = ctx.createGain(); midG.gain.value = 0.4;
+    mid.connect(midF); midF.connect(midG); midG.connect(gain);
+
+    // Low rumble (heavy rain)
+    const low = this._makeSrc(wbuf);
+    const lowF = this._makeFilter('lowpass', 200);
+    const lowG = ctx.createGain(); lowG.gain.value = 0.25;
+    low.connect(lowF); lowF.connect(lowG); lowG.connect(gain);
+
+    // LFO for variation
+    const lfo = this._makeLFO(0.7, 0.12, gain.gain);
+
+    hiss.start(); mid.start(); low.start();
+    return { gain, sources: [hiss, mid, low, lfo.osc] };
+  }
+
+  /* ── Thunderstorm ────────────────────────────────── */
+  _buildThunderstorm() {
+    const { ctx } = this;
+    const rain = this._buildRain();
+
+    // Deep subsonic rumble
+    const rbuf = this._makeBuffer(4, (d, len) => {
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    });
+    const rumble = this._makeSrc(rbuf);
+    const rF = this._makeFilter('lowpass', 80);
+    const rG = ctx.createGain(); rG.gain.value = 1.4;
+    rumble.connect(rF); rF.connect(rG); rG.connect(rain.gain);
+    rumble.start();
+
+    // Thunder burst gain
+    const thunderG = ctx.createGain(); thunderG.gain.value = 0;
+    const tbuf = this._makeBuffer(4, (d, len) => {
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    });
+    const tSrc = this._makeSrc(tbuf);
+    const tF = this._makeFilter('lowpass', 180);
+    tSrc.connect(tF); tF.connect(thunderG); thunderG.connect(rain.gain);
+    tSrc.start();
+
+    // Schedule thunder bursts using audio context time
+    const scheduleThunder = () => {
+      const now = ctx.currentTime;
+      const d = 10 + Math.random() * 30;
+      thunderG.gain.setValueAtTime(0, now + d);
+      thunderG.gain.linearRampToValueAtTime(3.0, now + d + 0.08);
+      thunderG.gain.exponentialRampToValueAtTime(0.001, now + d + 2.5 + Math.random() * 2);
+      thunderG.gain.setValueAtTime(0, now + d + 5);
+    };
+
+    scheduleThunder();
+    const timer = setInterval(scheduleThunder, 25000 + Math.random() * 15000);
+
+    return {
+      gain: rain.gain,
+      sources: [...rain.sources, rumble, tSrc],
+      cleanup: () => clearInterval(timer)
+    };
+  }
+
+  /* ── Coffee Shop ─────────────────────────────────── */
+  _buildCoffeeShop() {
+    const { ctx } = this;
+    const buf = this._makeBuffer(8, (d, len) => {
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    });
+
+    const gain = ctx.createGain();
+
+    // Low murmur base
+    const murmur = this._makeSrc(buf);
+    const mF = this._makeFilter('bandpass', 280, 0.6);
+    const mG = ctx.createGain(); mG.gain.value = 0.5;
+    murmur.connect(mF); mF.connect(mG); mG.connect(gain);
+
+    // Mid chatter
+    const chatter = this._makeSrc(buf);
+    const cF = this._makeFilter('bandpass', 1100, 1.2);
+    const cG = ctx.createGain(); cG.gain.value = 0.25;
+    chatter.connect(cF); cF.connect(cG); cG.connect(gain);
+
+    // High presence (cup clinking, subtle)
+    const presence = this._makeSrc(buf);
+    const pF = this._makeFilter('bandpass', 3000, 2.0);
+    const pG = ctx.createGain(); pG.gain.value = 0.06;
+    presence.connect(pF); pF.connect(pG); pG.connect(gain);
+
+    // Ambient low hum
+    const amb = this._makeSrc(buf);
+    const aF = this._makeFilter('lowpass', 400);
+    const aG = ctx.createGain(); aG.gain.value = 0.35;
+    amb.connect(aF); aF.connect(aG); aG.connect(gain);
+
+    // Chatter LFO (speech rhythm)
+    const lfo1 = this._makeLFO(0.4, 0.18, cG.gain);
+    const lfo2 = this._makeLFO(1.1, 0.08, mG.gain);
+
+    murmur.start(); chatter.start(); presence.start(); amb.start();
+    return { gain, sources: [murmur, chatter, presence, amb, lfo1.osc, lfo2.osc] };
+  }
+
+  /* ── Ocean Waves ─────────────────────────────────── */
+  _buildOcean() {
+    const { ctx } = this;
+    const buf = this._makeBuffer(10, (d, len) => {
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    });
+
+    const gain = ctx.createGain();
+
+    // Deep surf
+    const surf = this._makeSrc(buf);
+    const sF = this._makeFilter('lowpass', 500);
+    const sG = ctx.createGain(); sG.gain.value = 0.6;
+    surf.connect(sF); sF.connect(sG); sG.connect(gain);
+
+    // Foam/hiss at shore
+    const foam = this._makeSrc(buf);
+    const fF = this._makeFilter('bandpass', 2800, 0.5);
+    const fG = ctx.createGain(); fG.gain.value = 0.18;
+    foam.connect(fF); fF.connect(fG); fG.connect(gain);
+
+    // Wave rhythm — very slow LFO
+    const lfo1 = this._makeLFO(0.12, 0.28, gain.gain);
+    const lfo2 = this._makeLFO(0.07, 0.15, sG.gain);
+
+    surf.start(); foam.start();
+    return { gain, sources: [surf, foam, lfo1.osc, lfo2.osc] };
+  }
+
+  /* ── Forest ──────────────────────────────────────── */
+  _buildForest() {
+    const { ctx } = this;
+    const buf = this._makeBuffer(8, (d, len) => {
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    });
+
+    const gain = ctx.createGain();
+
+    // Wind through trees
+    const wind = this._makeSrc(buf);
+    const wF = this._makeFilter('lowpass', 350);
+    const wG = ctx.createGain(); wG.gain.value = 0.5;
+    wind.connect(wF); wF.connect(wG); wG.connect(gain);
+
+    // Rustling leaves
+    const leaves = this._makeSrc(buf);
+    const lF = this._makeFilter('bandpass', 1800, 0.7);
+    const lG = ctx.createGain(); lG.gain.value = 0.22;
+    leaves.connect(lF); lF.connect(lG); lG.connect(gain);
+
+    // Distant high rustles
+    const rustle = this._makeSrc(buf);
+    const rF = this._makeFilter('bandpass', 4500, 1.2);
+    const rG = ctx.createGain(); rG.gain.value = 0.07;
+    rustle.connect(rF); rF.connect(rG); rG.connect(gain);
+
+    // Wind LFO
+    const lfo1 = this._makeLFO(0.2, 0.2, gain.gain);
+    const lfo2 = this._makeLFO(0.5, 0.12, lG.gain);
+
+    wind.start(); leaves.start(); rustle.start();
+    return { gain, sources: [wind, leaves, rustle, lfo1.osc, lfo2.osc] };
+  }
+
+  /* ── Sound Management ────────────────────────────── */
+  async play(soundId) {
+    await this.init();
+    if (this.activeNodes[soundId]) return;
+
+    const builders = {
+      white:  () => this._buildWhiteNoise(),
+      brown:  () => this._buildBrownNoise(),
+      pink:   () => this._buildPinkNoise(),
+      rain:   () => this._buildRain(),
+      storm:  () => this._buildThunderstorm(),
+      coffee: () => this._buildCoffeeShop(),
+      ocean:  () => this._buildOcean(),
+      forest: () => this._buildForest(),
+    };
+
+    const nodes = builders[soundId]?.();
+    if (!nodes) return;
+
+    const vol = this.volumes[soundId] ?? 0.7;
+    nodes.gain.gain.value = vol;
+    nodes.gain.connect(this.masterGain);
+    this.activeNodes[soundId] = nodes;
+  }
+
+  stop(soundId) {
+    const nodes = this.activeNodes[soundId];
+    if (!nodes) return;
+
+    const { gain, ctx } = nodes, now = this.ctx.currentTime;
+    gain.gain.cancelScheduledValues(now);
+    gain.gain.setValueAtTime(gain.gain.value, now);
+    gain.gain.linearRampToValueAtTime(0.0001, now + 0.6);
+
+    setTimeout(() => {
+      nodes.sources.forEach(s => { try { s.stop(); s.disconnect(); } catch {} });
+      try { gain.disconnect(); } catch {}
+      if (nodes.cleanup) nodes.cleanup();
+    }, 700);
+
+    delete this.activeNodes[soundId];
+  }
+
+  setVolume(soundId, vol) {
+    this.volumes[soundId] = vol;
+    const nodes = this.activeNodes[soundId];
+    if (nodes && this.ctx) {
+      nodes.gain.gain.setTargetAtTime(vol, this.ctx.currentTime, 0.05);
+    }
+  }
+
+  setMasterVolume(vol) {
+    this.masterVolume = vol;
+    if (this.masterGain && this.ctx) {
+      this.masterGain.gain.setTargetAtTime(vol, this.ctx.currentTime, 0.05);
+    }
+  }
+
+  isPlaying(soundId) { return !!this.activeNodes[soundId]; }
+  activeCount() { return Object.keys(this.activeNodes).length; }
+
+  stopAll() {
+    Object.keys(this.activeNodes).forEach(id => this.stop(id));
+  }
+
+  setTimer(minutes) {
+    this.clearTimer();
+    if (!minutes) return;
+    this.timerEnd = Date.now() + minutes * 60000;
+    this._tickTimer();
+  }
+
+  _tickTimer() {
+    const remaining = this.timerEnd - Date.now();
+    if (remaining <= 0) {
+      this.clearTimer();
+      this._fadeAllOut();
+      window.dispatchEvent(new CustomEvent('ns:timer-ended'));
+      return;
+    }
+    window.dispatchEvent(new CustomEvent('ns:timer-tick', { detail: remaining }));
+    this._timerRAF = setTimeout(() => this._tickTimer(), 1000);
+  }
+
+  clearTimer() {
+    if (this._timerRAF) { clearTimeout(this._timerRAF); this._timerRAF = null; }
+    this.timerEnd = null;
+  }
+
+  _fadeAllOut() {
+    if (!this.masterGain || !this.ctx) return;
+    const now = this.ctx.currentTime;
+    this.masterGain.gain.setValueAtTime(this.masterVolume, now);
+    this.masterGain.gain.linearRampToValueAtTime(0.0001, now + 12);
+    setTimeout(() => {
+      this.stopAll();
+      if (this.masterGain) this.masterGain.gain.value = this.masterVolume;
+      window.dispatchEvent(new CustomEvent('ns:all-stopped'));
+    }, 13000);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   UI CONTROLLER
+═══════════════════════════════════════════════════════ */
+const engine = new NoisescapeEngine();
+
+const cards = document.querySelectorAll('.sound-card');
+const masterSlider = document.getElementById('masterVolume');
+const timerSelect = document.getElementById('timerSelect');
+const timerDisplay = document.getElementById('timerDisplay');
+const focusBtn = document.getElementById('focusBtn');
+const focusExitBtn = document.getElementById('focusExitBtn');
+const noSoundsHint = document.getElementById('noSoundsHint');
+const activeSoundCount = document.getElementById('activeSoundCount');
+const sessionTimeEl = document.getElementById('sessionTime');
+const menuBtn = document.getElementById('menuBtn');
+const navLinks = document.getElementById('navLinks');
+
+let sessionStart = null, sessionRAF = null;
+
+/* ── Card Interaction ──────────────────────────────── */
+cards.forEach(card => {
+  const soundId = card.dataset.sound;
+  const slider = card.querySelector('.sound-volume');
+  const toggle = card.querySelector('.sound-toggle');
+
+  async function toggleSound() {
+    if (engine.isPlaying(soundId)) {
+      engine.stop(soundId);
+      card.classList.remove('active');
+      toggle.setAttribute('aria-checked', 'false');
+    } else {
+      card.classList.add('active');
+      toggle.setAttribute('aria-checked', 'true');
+      await engine.play(soundId);
+      // Apply current slider value
+      engine.setVolume(soundId, parseFloat(slider.value));
+    }
+    updateUI();
+  }
+
+  card.addEventListener('click', e => {
+    if (e.target === slider || e.target.closest('.volume-control')) return;
+    toggleSound();
+  });
+
+  slider.addEventListener('input', e => {
+    e.stopPropagation();
+    engine.setVolume(soundId, parseFloat(e.target.value));
+  });
+
+  slider.addEventListener('click', e => e.stopPropagation());
+});
+
+/* ── Master Volume ─────────────────────────────────── */
+masterSlider.addEventListener('input', e => {
+  engine.setMasterVolume(parseFloat(e.target.value));
+});
+
+/* ── Timer ─────────────────────────────────────────── */
+timerSelect.addEventListener('change', e => {
+  const minutes = parseInt(e.target.value);
+  engine.setTimer(minutes);
+  if (!minutes) timerDisplay.classList.remove('visible');
+});
+
+window.addEventListener('ns:timer-tick', e => {
+  const ms = e.detail;
+  const m = Math.floor(ms / 60000);
+  const s = Math.floor((ms % 60000) / 1000);
+  timerDisplay.textContent = `${m}:${String(s).padStart(2,'0')} left`;
+  timerDisplay.classList.add('visible');
+});
+
+window.addEventListener('ns:timer-ended', () => {
+  timerDisplay.textContent = 'Done ✓';
+  timerSelect.value = '0';
+  setTimeout(() => timerDisplay.classList.remove('visible'), 3000);
+});
+
+window.addEventListener('ns:all-stopped', () => {
+  cards.forEach(c => {
+    c.classList.remove('active');
+    c.querySelector('.sound-toggle').setAttribute('aria-checked','false');
+  });
+  updateUI();
+});
+
+/* ── Focus Mode ────────────────────────────────────── */
+focusBtn.addEventListener('click', () => {
+  document.body.classList.add('focus-mode');
+  document.documentElement.requestFullscreen?.().catch(() => {});
+});
+
+focusExitBtn.addEventListener('click', () => {
+  document.body.classList.remove('focus-mode');
+  document.exitFullscreen?.().catch(() => {});
+});
+
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) document.body.classList.remove('focus-mode');
+});
+
+/* ── Mobile Menu ───────────────────────────────────── */
+menuBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.addEventListener('click', e => {
+  if (e.target.tagName === 'A') navLinks.classList.remove('open');
+});
+
+/* ── Presets ───────────────────────────────────────── */
+const PRESETS = {
+  focus:  { white:0, brown:0.75, pink:0, rain:0, storm:0, coffee:0.4, ocean:0, forest:0 },
+  sleep:  { white:0, brown:0, pink:0.8, rain:0.3, storm:0, coffee:0, ocean:0.4, forest:0 },
+  rain:   { white:0, brown:0.3, pink:0, rain:0.85, storm:0, coffee:0, ocean:0, forest:0 },
+  nature: { white:0, brown:0, pink:0, rain:0.3, storm:0, coffee:0, ocean:0.5, forest:0.6 },
+  work:   { white:0.2, brown:0, pink:0, rain:0, storm:0, coffee:0.8, ocean:0, forest:0 },
+};
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  const preset = btn.dataset.preset;
+  btn.addEventListener('click', async () => {
+    if (preset === 'clear') {
+      engine.stopAll();
+      cards.forEach(c => {
+        c.classList.remove('active');
+        c.querySelector('.sound-toggle').setAttribute('aria-checked','false');
+      });
+      updateUI();
+      return;
+    }
+    const config = PRESETS[preset];
+    if (!config) return;
+
+    // Stop all
+    engine.stopAll();
+    cards.forEach(c => { c.classList.remove('active'); c.querySelector('.sound-toggle').setAttribute('aria-checked','false'); });
+
+    // Start preset sounds
+    for (const [id, vol] of Object.entries(config)) {
+      if (vol > 0) {
+        const card = document.querySelector(`[data-sound="${id}"]`);
+        if (!card) continue;
+        card.classList.add('active');
+        card.querySelector('.sound-toggle').setAttribute('aria-checked','true');
+        card.querySelector('.sound-volume').value = vol;
+        await engine.play(id);
+        engine.setVolume(id, vol);
+      }
+    }
+    updateUI();
+  });
+});
+
+/* ── UI Update ─────────────────────────────────────── */
+function updateUI() {
+  const count = engine.activeCount();
+  activeSoundCount.textContent = count;
+  noSoundsHint.classList.toggle('hidden', count > 0);
+
+  if (count > 0 && !sessionStart) {
+    sessionStart = Date.now();
+    tickSession();
+  } else if (count === 0) {
+    sessionStart = null;
+    if (sessionRAF) { cancelAnimationFrame(sessionRAF); sessionRAF = null; }
+    sessionTimeEl.textContent = '0:00';
+  }
+}
+
+function tickSession() {
+  if (!sessionStart) return;
+  const elapsed = Date.now() - sessionStart;
+  const m = Math.floor(elapsed / 60000);
+  const s = Math.floor((elapsed % 60000) / 1000);
+  sessionTimeEl.textContent = `${m}:${String(s).padStart(2,'0')}`;
+  sessionRAF = requestAnimationFrame(tickSession);
+}
+
+/* ── Track Slider Fill (visual feedback) ───────────── */
+document.querySelectorAll('input[type=range]').forEach(slider => {
+  const update = () => {
+    const pct = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+    slider.style.background = `linear-gradient(to right, var(--accent) ${pct}%, var(--surface-3) ${pct}%)`;
+  };
+  slider.addEventListener('input', update);
+  update();
+});
+</script>
+</body>
+</html>

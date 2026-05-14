@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — Noisescape White Noise Generator</title>
+  <meta name="description" content="Frequently asked questions about Noisescape. Learn about white noise, brown noise, pink noise, how the Web Audio API works, privacy, cost, and more.">
+  <link rel="canonical" href="https://whitenoisegenerator.app/faq">
+  <meta name="google-adsense-account" content="ca-pub-3379075069129713">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="FAQ — Noisescape White Noise Generator">
+  <meta property="og:description" content="Answers to common questions about Noisescape — privacy, cost, browser support, sound science, and more.">
+  <meta property="og:url" content="https://whitenoisegenerator.app/faq">
+  <meta property="og:type" content="article">
+  <link rel="alternate" hreflang="en" href="https://whitenoisegenerator.app/faq">
+  <link rel="alternate" hreflang="x-default" href="https://whitenoisegenerator.app/faq">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Noisescape completely free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Noisescape is free forever. There are no premium tiers, no subscription, no account required, and no payment of any kind. All 8 sound generators, mixing, the sleep timer, and focus mode are available to everyone." }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to download anything?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No download is required. Noisescape runs entirely in your browser using the Web Audio API. Open the website and click a sound to start listening. It works on desktop, laptop, tablet, and phone." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between white noise, brown noise, and pink noise?",
+        "acceptedAnswer": { "@type": "Answer", "text": "White noise has equal energy at all frequencies — a flat, even hiss. Brown noise has a steep rolloff, emphasizing low bass frequencies — a deep, warm rumble. Pink noise falls between them with a -3 dB/octave slope, sounding balanced and natural. Each has different strengths for masking, focus, and sleep." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I mix multiple sounds at the same time?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes — this is one of Noisescape's core features. You can enable any combination of the 8 sounds simultaneously and control each one's volume independently. All mixing happens in real time in your browser." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Noisescape track me or collect my data?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. Noisescape does not collect, store, or transmit any personal data. There are no accounts, no cookies for tracking, and no analytics beyond basic server-side page view counting. No audio data leaves your device." }
+      },
+      {
+        "@type": "Question",
+        "name": "Will Noisescape work offline?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Once the page has loaded, the audio engine runs entirely locally — no audio is downloaded or streamed. If you lose internet connection mid-session, your sounds will continue playing. The page may not reload correctly offline, but an active session is not interrupted." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it safe to play white noise while sleeping?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, when used at appropriate volumes. Keep your listening volume below the level where you need to raise your voice to speak over it. For extended or overnight use through speakers, set the volume conservatively. Avoid using high volumes through earbuds or headphones for extended periods." }
+      },
+      {
+        "@type": "Question",
+        "name": "What browsers are supported?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Noisescape works in any browser that supports the Web Audio API: Chrome, Firefox, Safari, Edge, and their mobile equivalents. This covers over 97% of browsers in use worldwide. Internet Explorer is not supported." }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .faq-section-title {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      font-weight: 600;
+      margin: 48px 0 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-section-title:first-of-type { margin-top: 0; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12h2M6 6l1.5 2M6 18l1.5-2M18 6l-1.5 2M18 18l-1.5-2M22 12h-2"/><path d="M8 9v6M11 7v10M14 9v6M17 11v2"/></svg>
+    Noisescape
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/">Generator</a></li>
+    <li><a href="/how-it-works">How It Works</a></li>
+    <li><a href="/focus-tips">Focus Tips</a></li>
+    <li><a href="/sleep-sounds">Sleep Sounds</a></li>
+    <li><a href="/faq" class="active">FAQ</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="menuBtn" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+
+<header class="article-hero">
+  <div class="page-badge">Help &amp; FAQ</div>
+  <h1>Frequently asked<br><em>questions</em></h1>
+  <p style="color:var(--text-dim);font-size:1.05rem;margin-top:18px;max-width:540px;margin-left:auto;margin-right:auto;">Everything you want to know about how Noisescape works, the science behind the sounds, and our approach to privacy and cost.</p>
+</header>
+
+<div class="article-body">
+
+  <p class="faq-section-title">Using Noisescape</p>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Is Noisescape completely free?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Yes, completely and permanently free. There are no premium tiers, no subscription, no account required, and no payment of any kind — ever. All 8 sound generators, real-time mixing, individual volume controls, the sleep timer, presets, and focus mode are available to everyone. The site is supported by advertising, but the tool itself has no paywalled features.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Do I need to download an app or install anything?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Nothing to download, install, or even sign up for. Open the website in any modern browser, click a sound card, and it starts playing immediately. The entire audio engine is JavaScript that runs in your browser tab. It works on desktop, laptop, tablet, and mobile phone — no app store required.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Can I mix multiple sounds at the same time?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Yes — and this is one of the best things about Noisescape. You can enable any combination of the 8 sounds simultaneously and adjust each one's volume independently with its slider. All mixing happens in real time at zero latency inside your browser. A popular combination is Brown Noise + Rain for a rainy cozy study session, or Pink Noise + Ocean for sleep. Use the preset buttons at the top for curated starting points, then tweak volumes to taste.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      How does the sleep timer work?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Select a duration (30, 60, 90, or 120 minutes) from the Timer dropdown in the controls bar. The countdown will display. When time expires, all active sounds fade out smoothly over about 12 seconds so the transition doesn't startle you awake. The tab needs to remain open and your device must stay awake for the timer to work — some mobile browsers aggressively suspend background tabs, so we recommend keeping your screen active or using a desktop browser for overnight sessions.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      What is Focus Mode?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Focus Mode hides everything on the page except your sound controls and enters fullscreen. No navigation, no footer, no content — just the sound mixer. It's designed to be the least distracting possible interface during a deep work session. Click the Focus Mode button in the controls bar to enter, and press Escape or the Exit button in the top-right corner to leave. All your sound settings are preserved when you toggle between modes.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Why didn't any sound play when I clicked a card?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Browsers require a user gesture (a tap or click) to start the audio engine for the first time — this is a security feature designed to prevent websites from blasting audio automatically. If clicking a card doesn't produce sound, try clicking it again. If it still doesn't work, check that your device isn't muted, that your browser tab isn't muted (look for a speaker icon in your browser tab), and that the master volume slider isn't at zero. Safari on iOS sometimes needs an extra tap to initialize the AudioContext — clicking any card should work.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Will Noisescape work if I lose my internet connection?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Yes — once the page has fully loaded, the audio engine is entirely local. No audio is streamed or downloaded. All sounds are generated mathematically inside your browser. If you lose connection mid-session, your sounds keep playing. If you close and reopen your browser while offline, the page may not load (it needs a network connection to fetch the HTML and CSS the first time), but an active session won't be interrupted by a network dropout.</div>
+  </div>
+
+  <p class="faq-section-title">The Sounds &amp; Science</p>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      What is the difference between white, brown, and pink noise?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">All three are broadband noise — random sounds covering a wide range of frequencies — but they differ in how energy is distributed across the spectrum. White noise has equal energy at every frequency, sounding like a sharp, even hiss (like a fan or static). Brown noise rolls off steeply at high frequencies, leaving a deep, warm bass rumble (like a waterfall or strong wind). Pink noise falls between them with a more balanced, natural character (like steady rainfall). Each has different strengths: white for maximum masking, brown for deep work and anxiety, pink for sleep and creativity.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Are there any audio files being played? Does it use streaming?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">No audio files whatsoever. All sounds are synthesized in real time inside your browser using the Web Audio API. White noise is generated by filling an audio buffer with random values. Brown noise integrates those values. Pink noise uses the Voss-McCartney algorithm with six staggered noise generators. Rain, ocean, forest, and coffee shop sounds are built from combinations of filtered noise, oscillators, and gain modulation nodes. There is nothing to download and nothing being streamed from a server.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Does background noise actually help with focus and sleep, or is it a placebo?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">The evidence is solid. For sleep, multiple randomized controlled trials have shown that white noise reduces sleep onset time and nighttime arousals, with particularly strong evidence in noisy environments and in infants. A 2012 Journal of Consumer Research study demonstrated that moderate ambient noise (70 dB) improved creative task performance compared to both silence and loud noise. Pink noise synchronized to slow-wave oscillations has been shown to enhance deep sleep and next-day memory performance in peer-reviewed research. The mechanism — acoustic masking of disruptive transient sounds — is well-understood physics, not placebo.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Which noise color is best for ADHD?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">White noise has the strongest evidence base for ADHD specifically. Several studies have found that white noise backgrounds improve task performance and sustained attention in children with ADHD, with some researchers proposing that the stochastic resonance effect is particularly beneficial for dopamine-deficient systems. Anecdotally, many adults with ADHD report a strong preference for brown noise — its deep, immersive quality seems to quiet mental chatter. The honest answer is: try both and see which one makes it easier to stay on task. Individual variation is enormous.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Is it safe to play white noise all night while sleeping?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Yes, when used at reasonable volumes. The WHO recommends a maximum of 85 dB for 8 hours, but for sleep we recommend significantly lower — around 50–60 dB, which is roughly the volume of a quiet conversation. You should be able to speak normally over the sound without raising your voice. For infants, the American Academy of Pediatrics recommends keeping white noise machines below 50 dB and at least 2 meters from the crib. Use the sleep timer if you prefer not to play sound all night — 60–90 minutes covers the most critical sleep onset period for most people.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Why do some people prefer brown noise over white noise?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">White noise contains significant high-frequency content that some people find irritating or grating over extended periods, particularly those who are sensitive to treble frequencies. Brown noise's steep high-frequency rolloff produces a sound that feels warmer, deeper, and more physically immersive — many people describe it as "wrapping around" them rather than sitting on top. There's also anecdotal but growing evidence that the deep bass of brown noise has a mild anxiolytic (anxiety-reducing) effect, making it particularly valuable for people with racing thoughts, anxiety, or ADHD. If white noise ever makes you slightly on edge, switch to brown — most people immediately notice the difference.</div>
+  </div>
+
+  <p class="faq-section-title">Privacy &amp; Technical</p>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Does Noisescape collect any data about me?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">No personal data is collected, stored, or transmitted. We don't know which sounds you play, for how long, at what volume, or where you are. No account is required so there's nothing to associate with you. No audio data ever leaves your device. Basic server-side access logging (standard for any web server) records page requests — this includes your IP address and the pages visited, but this data is not shared, sold, or used for profiling, and is routinely deleted.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      What browsers does Noisescape support?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Any browser that supports the Web Audio API, which is a W3C standard included in every modern browser: Chrome 66+, Firefox 60+, Safari 14+, Edge 79+, and their iOS and Android equivalents. This covers over 97% of browsers currently in use worldwide. Internet Explorer is not supported. If you are on a very old device, try updating your browser — Web Audio API support is determined by browser version, not device age.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Why does Noisescape ask permission to enter fullscreen?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">The Focus Mode button uses the browser's Fullscreen API to expand the page to fill your screen, which removes browser chrome (tabs, address bar, etc.) for a cleaner experience. Browsers require explicit user consent before any page can enter fullscreen — this is a security feature preventing malicious sites from covering your whole screen unexpectedly. Noisescape only requests fullscreen when you explicitly click "Focus Mode." Pressing Escape always exits fullscreen regardless.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      Does Noisescape work on iPhone and Android?
+      <span class="faq-chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </div>
+    <div class="faq-answer">Yes. The site is fully responsive and works on mobile browsers including Safari on iOS and Chrome on Android. Note that mobile operating systems may suspend audio from background tabs to save battery, especially if your screen locks. To keep Noisescape playing while your phone screen is off, you may need to adjust your browser's background activity settings, or keep the screen on. For overnight sleep use, a desktop or laptop left running is more reliable than a mobile phone browser.</div>
+  </div>
+
+  <div style="margin-top:56px;padding-top:32px;border-top:1px solid var(--border);text-align:center;">
+    <h3 style="margin-bottom:12px;">Ready to try it?</h3>
+    <p style="max-width:480px;margin:0 auto 24px;">The fastest way to understand what Noisescape does is to open it and start mixing. No signup, no commitment — just click and listen.</p>
+    <a href="/" class="btn btn-primary">Open the Generator →</a>
+  </div>
+
+  <div class="internal-links" style="justify-content:center;margin-top:32px;">
+    <a href="/how-it-works" class="internal-link">How It Works</a>
+    <a href="/focus-tips" class="internal-link">Focus Science</a>
+    <a href="/sleep-sounds" class="internal-link">Sleep Sounds Guide</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="nav-logo" style="font-size:1.2rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12h2M6 6l1.5 2M6 18l1.5-2M18 6l-1.5 2M18 18l-1.5-2M22 12h-2"/><path d="M8 9v6M11 7v10M14 9v6M17 11v2"/></svg>
+        Noisescape
+      </a>
+      <p>Free, browser-based ambient sound generator. No downloads, no accounts, no ads.</p>
+    </div>
+    <div class="footer-col"><h5>Tools</h5><ul>
+      <li><a href="/">White Noise Generator</a></li>
+      <li><a href="/">Brown Noise Online</a></li>
+      <li><a href="/">Pink Noise Generator</a></li>
+      <li><a href="/">Rain Sounds</a></li>
+    </ul></div>
+    <div class="footer-col"><h5>Learn</h5><ul>
+      <li><a href="/how-it-works">How It Works</a></li>
+      <li><a href="/focus-tips">Focus &amp; Productivity</a></li>
+      <li><a href="/sleep-sounds">Sleep Sounds Guide</a></li>
+      <li><a href="/faq">FAQ</a></li>
+    </ul></div>
+    <div class="footer-col"><h5>About</h5><ul>
+      <li><a href="/faq">Privacy</a></li>
+      <li><a href="/faq">100% Free</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Noisescape. Free forever. Zero tracking.</p>
+    <p>Made with Web Audio API · No audio files used</p>
+  </div>
+</footer>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+  document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+  document.getElementById('navLinks').addEventListener('click', e => { if(e.target.tagName==='A') document.getElementById('navLinks').classList.remove('open'); });
+</script>
+</body>
+</html>

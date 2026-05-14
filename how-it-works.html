@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works — Noisescape White Noise Generator</title>
+  <meta name="description" content="Learn how Noisescape generates white noise, brown noise, pink noise, and nature sounds entirely in your browser using the Web Audio API — no audio files, no downloads.">
+  <link rel="canonical" href="https://whitenoisegenerator.app/how-it-works">
+  <meta name="google-adsense-account" content="ca-pub-3379075069129713">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="How It Works — Noisescape White Noise Generator">
+  <meta property="og:description" content="Learn how we synthesize white noise, brown noise, rain, and ocean sounds directly in your browser with no downloads.">
+  <meta property="og:url" content="https://whitenoisegenerator.app/how-it-works">
+  <meta property="og:type" content="article">
+  <link rel="alternate" hreflang="en" href="https://whitenoisegenerator.app/how-it-works">
+  <link rel="alternate" hreflang="x-default" href="https://whitenoisegenerator.app/how-it-works">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How Noisescape Generates Ambient Sounds in Your Browser",
+    "description": "Technical explanation of how the Web Audio API is used to synthesize white noise, brown noise, pink noise, and nature sounds.",
+    "url": "https://whitenoisegenerator.app/how-it-works",
+    "publisher": { "@type": "Organization", "name": "Noisescape" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .tech-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin: 28px 0;
+    }
+    .tech-card h3 { margin-bottom: 14px; }
+    .tech-card code {
+      display: block;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      padding: 16px 20px;
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-family: 'Courier New', monospace;
+      margin: 14px 0;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+    .sound-type-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 28px 0;
+    }
+    .sound-type-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px 22px;
+    }
+    .sound-type-card h4 { margin-bottom: 8px; color: var(--accent); }
+    .sound-type-card p { font-size: 0.9rem; }
+    .step-list { list-style: none; padding: 0; counter-reset: steps; }
+    .step-list li {
+      counter-increment: steps;
+      display: flex;
+      gap: 18px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .step-list li::before {
+      content: counter(steps);
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(82,215,170,0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .step-content h4 { margin-bottom: 6px; }
+    .step-content p { font-size: 0.93rem; }
+    @media (max-width: 600px) {
+      .sound-type-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12h2M6 6l1.5 2M6 18l1.5-2M18 6l-1.5 2M18 18l-1.5-2M22 12h-2"/><path d="M8 9v6M11 7v10M14 9v6M17 11v2"/></svg>
+    Noisescape
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/">Generator</a></li>
+    <li><a href="/how-it-works" class="active">How It Works</a></li>
+    <li><a href="/focus-tips">Focus Tips</a></li>
+    <li><a href="/sleep-sounds">Sleep Sounds</a></li>
+    <li><a href="/faq">FAQ</a></li>
+  </ul>
+  <button class="nav-menu-btn" id="menuBtn" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+</nav>
+
+<header class="article-hero">
+  <div class="page-badge">Technical</div>
+  <h1>How Noisescape works</h1>
+  <p style="color:var(--text-dim);font-size:1.05rem;margin-top:16px;max-width:600px;margin-left:auto;margin-right:auto;">Every sound you hear is synthesized live in your browser using the Web Audio API. There are no audio files, no servers streaming sound, and no data leaving your device.</p>
+</header>
+
+<article class="article-body">
+
+  <h2>The Web Audio API</h2>
+
+  <p>Modern browsers ship with a powerful built-in sound engine called the <strong>Web Audio API</strong>. Originally designed for games and interactive applications, it gives developers precise, low-latency control over audio synthesis, processing, and spatialization — all without any plugins or downloads.</p>
+
+  <p>Noisescape uses this API as its entire audio backend. When you click a sound card, JavaScript code running in your browser tab generates that sound mathematically, in real time, using your device's own audio hardware. The result is indistinguishable from — and often smoother than — recorded audio files, because there are no compression artifacts, no loop seams, and no network latency.</p>
+
+  <div class="tech-card">
+    <h3>The audio graph</h3>
+    <p>The Web Audio API models sound as a graph of connected nodes. Each node transforms the audio signal in some way — generating it, filtering it, amplifying it, or routing it to your speakers. Here's a simplified version of how a rain sound is constructed:</p>
+    <code>AudioBufferSourceNode (white noise)
+  → BiquadFilterNode (bandpass ~4200 Hz)   ← rain hiss
+  → GainNode (individual volume)
+     ↓
+AudioBufferSourceNode (white noise)
+  → BiquadFilterNode (bandpass ~900 Hz)    ← rain on surfaces
+  → GainNode
+     ↓
+OscillatorNode (0.7 Hz sine)               ← natural variation LFO
+  → GainNode (modulation depth)
+  → GainNode.gain AudioParam               ← modulates master level
+     ↓
+MasterGainNode → AudioContext.destination (speakers)</code>
+    <p>Every sound in Noisescape is built from variations of this pattern — noise sources filtered and shaped into recognizable acoustic textures.</p>
+  </div>
+
+  <h2>The eight sound generators</h2>
+
+  <p>Each sound uses a different combination of noise buffers, filters, oscillators, and gain modulation. Here's how each one is built:</p>
+
+  <div class="sound-type-grid">
+    <div class="sound-type-card">
+      <h4>〰️ White Noise</h4>
+      <p>Pure random values between -1 and 1 fill an audio buffer. Every frequency is equally represented — the acoustic equivalent of a blank canvas. Ideal for general masking.</p>
+    </div>
+    <div class="sound-type-card">
+      <h4>🌊 Brown Noise</h4>
+      <p>Each sample is generated by integrating (accumulating) white noise. This creates a signal where lower frequencies dominate — a deep, warm rumble with a -6 dB/octave slope. Many people find it more soothing than white noise.</p>
+    </div>
+    <div class="sound-type-card">
+      <h4>🌸 Pink Noise</h4>
+      <p>The Voss-McCartney algorithm uses six parallel white noise generators, each updating at half the rate of the previous. The sum produces a -3 dB/octave slope — balanced between white and brown, matching how human hearing perceives equal loudness across octaves.</p>
+    </div>
+    <div class="sound-type-card">
+      <h4>🌧️ Rain</h4>
+      <p>Three filtered noise bands — a high bandpass (4200 Hz) for the hiss of individual drops, a mid bandpass (900 Hz) for rain hitting surfaces, and a lowpass for bass rumble — are mixed and gently modulated by a 0.7 Hz LFO to create natural variation.</p>
+    </div>
+    <div class="sound-type-card">
+      <h4>⛈️ Thunderstorm</h4>
+      <p>Rain synthesis plus a very low lowpass filter (80 Hz) for subsonic rumble, and a separate burst gain node that creates thunder cracks at randomized intervals using AudioParam automation curves.</p>
+    </div>
+    <div class="sound-type-card">
+      <h4>☕ Coffee Shop</h4>
+      <p>Four overlapping bands: a low bandpass (280 Hz) for murmur, a narrow mid bandpass (1100 Hz) for chatter, a very subtle high bandpass (3000 Hz) for ambient presence, and a lowpass (400 Hz) for room tone. Two LFOs at 0.4 Hz and 1.1 Hz create the rhythm of conversation.</p>
+    </div>
+    <div class="sound-type-card">
+      <h4>🏖️ Ocean Waves</h4>
+      <p>A lowpass filter (500 Hz) creates the deep surge of surf, while a high bandpass (2800 Hz) adds foam and hiss. Two very slow LFOs — at 0.12 Hz and 0.07 Hz — create the rhythmic rise and fall of waves crashing, about 7–8 seconds per cycle.</p>
+    </div>
+    <div class="sound-type-card">
+      <h4>🌲 Forest</h4>
+      <p>Wind through trees (lowpass 350 Hz), leaf rustle (bandpass 1800 Hz), and distant high-frequency rustles (bandpass 4500 Hz) are layered and animated by a 0.2 Hz LFO for wind gusts and a 0.5 Hz LFO for leaf movement.</p>
+    </div>
+  </div>
+
+  <h2>How mixing works</h2>
+
+  <p>Each active sound connects its output GainNode to a single MasterGainNode, which connects to your speakers. WebAudio automatically sums all incoming signals at each connection point — so enabling multiple sounds creates an instantaneous mix with zero interference. You can layer all eight sounds simultaneously if you wish, adjusting each independently.</p>
+
+  <p>The individual volume slider for each sound sets the gain of that sound's output node. The master volume slider controls the MasterGainNode. All gain changes are applied using <code>setTargetAtTime()</code> with a short time constant to prevent clicks and pops during adjustments.</p>
+
+  <h2>The sleep timer</h2>
+
+  <p>When you set a timer, Noisescape stores the target end time and uses <code>setTimeout()</code> to count down. When time is up, it triggers a 12-second fade using the AudioParam automation API:</p>
+
+  <code>masterGain.gain.linearRampToValueAtTime(0.0001, currentTime + 12);</code>
+
+  <p>This smooth fade prevents the jarring experience of sound cutting out abruptly — an important consideration when using Noisescape for sleep. After the fade completes, all source nodes are stopped and disconnected to free memory.</p>
+
+  <h2>Why this approach beats audio files</h2>
+
+  <ul>
+    <li><strong>No loop seams.</strong> Pre-recorded loops always have an audible glitch at the repeat point. Generated sound is mathematically continuous.</li>
+    <li><strong>No compression artifacts.</strong> MP3 and AAC compression introduce subtle distortions particularly noticeable in noise textures. Generated audio is bit-perfect.</li>
+    <li><strong>Zero bandwidth after load.</strong> Once the page loads (under 50 KB total), no audio data is ever downloaded. You can even go offline and it keeps working.</li>
+    <li><strong>Infinite variation.</strong> Random number generators ensure the sound is never exactly the same twice, making it feel more natural than a looping file.</li>
+    <li><strong>Real-time mixing.</strong> Adjusting volumes is instantaneous and artifact-free — far smoother than fading between pre-mixed audio files.</li>
+  </ul>
+
+  <h2>Privacy &amp; security</h2>
+
+  <p>Because Noisescape generates sound locally, there is nothing to track. We don't know what sounds you play, for how long, or at what volume. No audio data ever leaves your device. The only network requests made after the initial page load are for Google Fonts (typography) and — if you have an AdSense account — ad serving scripts. The audio engine itself is entirely self-contained JavaScript.</p>
+
+  <div class="callout">
+    <p><strong>Open standard.</strong> The Web Audio API is a W3C standard supported by every modern browser — Chrome, Firefox, Safari, Edge, and their mobile counterparts. If your browser can play YouTube, it can run Noisescape.</p>
+  </div>
+
+  <h2>How presets work</h2>
+
+  <p>The built-in presets (Deep Focus, Sleep, Rainy Day, etc.) are simply predefined volume configurations. When you select a preset, the UI stops all current sounds, then starts the preset sounds with pre-set volume levels. The audio engine underneath is identical — presets are just a convenience layer on top of the same mixing controls you use manually.</p>
+
+  <ul>
+    <li><strong>Deep Focus:</strong> Brown noise (75%) + Coffee Shop (40%) — masks office chatter while maintaining gentle stimulation.</li>
+    <li><strong>Sleep:</strong> Pink noise (80%) + Rain (30%) + Ocean (40%) — the three sounds most associated with improved sleep quality in research literature.</li>
+    <li><strong>Rainy Day:</strong> Brown noise (30%) + Rain (85%) — pure cozy.</li>
+    <li><strong>Nature:</strong> Rain (30%) + Ocean (50%) + Forest (60%) — a layered outdoor soundscape.</li>
+    <li><strong>Work Café:</strong> White noise (20%) + Coffee Shop (80%) — the classic productive background noise.</li>
+  </ul>
+
+  <h2>Start listening now</h2>
+
+  <p>Understanding how it works is interesting — but experiencing it is better. Head to the generator and try layering a few sounds together. Most people find their personal mix within a couple of minutes.</p>
+
+  <div class="internal-links">
+    <a href="/" class="internal-link">→ Open Generator</a>
+    <a href="/focus-tips" class="internal-link">→ Science of Focus Sounds</a>
+    <a href="/sleep-sounds" class="internal-link">→ Best Sounds for Sleep</a>
+    <a href="/faq" class="internal-link">→ FAQ</a>
+  </div>
+
+</article>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="nav-logo" style="font-size:1.2rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12h2M6 6l1.5 2M6 18l1.5-2M18 6l-1.5 2M18 18l-1.5-2M22 12h-2"/><path d="M8 9v6M11 7v10M14 9v6M17 11v2"/></svg>
+        Noisescape
+      </a>
+      <p>Free, browser-based ambient sound generator. No downloads, no accounts, no ads.</p>
+    </div>
+    <div class="footer-col"><h5>Tools</h5><ul>
+      <li><a href="/">White Noise Generator</a></li>
+      <li><a href="/">Brown Noise Online</a></li>
+      <li><a href="/">Rain Sounds</a></li>
+      <li><a href="/">Ocean Wave Sounds</a></li>
+    </ul></div>
+    <div class="footer-col"><h5>Learn</h5><ul>
+      <li><a href="/how-it-works">How It Works</a></li>
+      <li><a href="/focus-tips">Focus &amp; Productivity</a></li>
+      <li><a href="/sleep-sounds">Sleep Sounds Guide</a></li>
+      <li><a href="/faq">FAQ</a></li>
+    </ul></div>
+    <div class="footer-col"><h5>About</h5><ul>
+      <li><a href="/faq">Privacy</a></li>
+      <li><a href="/faq">100% Free</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Noisescape. Free forever. Zero tracking.</p>
+    <p>Made with Web Audio API · No audio files used</p>
+  </div>
+</footer>
+<script>
+  document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+  document.getElementById('navLinks').addEventListener('click', e => { if(e.target.tagName==='A') document.getElementById('navLinks').classList.remove('open'); });
+</script>
+</body>
+</html>
