@@ -3,48 +3,48 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>https://whitenoisegenerator.app/</loc>
+    <loc>https://noisescap.vercel.app/</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en"        href="https://whitenoisegenerator.app/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://whitenoisegenerator.app/"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://noisescap.vercel.app/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noisescap.vercel.app/"/>
   </url>
 
   <url>
-    <loc>https://whitenoisegenerator.app/how-it-works</loc>
+    <loc>https://noisescap.vercel.app/how-it-works</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en"        href="https://whitenoisegenerator.app/how-it-works"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://whitenoisegenerator.app/how-it-works"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://noisescap.vercel.app/how-it-works"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noisescap.vercel.app/how-it-works"/>
   </url>
 
   <url>
-    <loc>https://whitenoisegenerator.app/focus-tips</loc>
+    <loc>https://noisescap.vercel.app/focus-tips</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en"        href="https://whitenoisegenerator.app/focus-tips"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://whitenoisegenerator.app/focus-tips"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://noisescap.vercel.app/focus-tips"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noisescap.vercel.app/focus-tips"/>
   </url>
 
   <url>
-    <loc>https://whitenoisegenerator.app/sleep-sounds</loc>
+    <loc>https://noisescap.vercel.app/sleep-sounds</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en"        href="https://whitenoisegenerator.app/sleep-sounds"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://whitenoisegenerator.app/sleep-sounds"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://noisescap.vercel.app/sleep-sounds"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noisescap.vercel.app/sleep-sounds"/>
   </url>
 
   <url>
-    <loc>https://whitenoisegenerator.app/faq</loc>
+    <loc>https://noisescap.vercel.app/faq</loc>
     <lastmod>2025-06-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en"        href="https://whitenoisegenerator.app/faq"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://whitenoisegenerator.app/faq"/>
+    <xhtml:link rel="alternate" hreflang="en"        href="https://noisescap.vercel.app/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noisescap.vercel.app/faq"/>
   </url>
 
 </urlset>
